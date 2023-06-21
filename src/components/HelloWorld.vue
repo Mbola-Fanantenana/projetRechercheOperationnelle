@@ -1,5 +1,7 @@
 <script>
 import { DataSet, Network } from 'vis-network/standalone';
+import {bellmanFordMinimisation} from './../assets/js/bellmanFordMinimisation.js'
+import {bellmanFordMaximisation} from './../assets/js/bellmanFordMaximisation.js'
 
 export default {
   data() {
@@ -11,10 +13,11 @@ export default {
       selectedNode: null,
       startNode: null,
       endNode: null,
-      arcValues: '',
+      arcValues: [{}],
       startNodeGraph: '',
       endNodeGraph: '',
-      nouveauLabel: ''
+      nouveauLabel: '',
+      fordResult: '',
     };
   },
   mounted() {
@@ -181,6 +184,20 @@ export default {
         console.log('Noeud de fin mis à jour:', this.endNode);
       }
     },
+
+    runAlgo(type) {
+      let input = this.arcValues
+      let start = this.startNodeGraph.toString()
+      let des = this.endNodeGraph.toString()
+      let result;
+      // alert(input+ " " + this.startNodeGraph + " " + this.endNodeGraph)
+      if(type){
+        result = bellmanFordMinimisation(input, start, des)
+      } else{
+        result = bellmanFordMaximisation(input, start, des)
+      }
+      this.fordResult = result
+    },
     /*
     modifierNoeud() {
       if (this.selectedNode && this.nouveauLabel.trim() !== '') {
@@ -248,20 +265,27 @@ export default {
             <button @click="supprimerNoeud" :disabled="!selectedNode"
               class="px-4 py-2 bg-red-500 text-white rounded">Supprimer</button>
           </div>
-          <div class="mr-4">
-            <button @click="runAlgo" class="px-4 py-2 bg-blue-500 text-white rounded">Résultat</button>
-          </div>
         </div>
       </div>
       <div class="col-span-2">
-        <div class="w-full h-80 bg-gray-300 rounded" ref="graphContainer"></div>
+        <div class="w-full h-[75vh] bg-gray-300 rounded" ref="graphContainer"></div>
       </div>
       <div class="col-span-1">
+        <div class="flex">
+          <div class="mr-4">
+            <button @click="runAlgo(1)" class="px-2 py-2 bg-green-500 text-white rounded">Minimisation</button>
+          </div>
+          <div class="mr-4">
+            <button @click="runAlgo(0)" class="px-2 py-2 bg-gray-500 text-white rounded">Maximisation</button>
+          </div>
+        </div>
         <div class="bg-white shadow-lg rounded-lg p-4">
           <h2 class="text-xl font-bold mb-2">Valeurs des arcs entre les noeuds :</h2>
           <ul>
             <!-- <li v-for="(value, index) in arcValues" :key="index">{{ value }}</li> -->
             {{ arcValues }}
+            <br>
+            resultat:{{ fordResult }}
           </ul>
         </div>
       </div>
