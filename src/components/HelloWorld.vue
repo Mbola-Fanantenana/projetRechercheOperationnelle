@@ -20,10 +20,13 @@ export default {
       fordResult: '',
     };
   },
+
+  //Initialisation du graphe
   mounted() {
     this.renderGraph();
   },
   methods: {
+    //affichage du graphe
     renderGraph() {
       const data = {
         nodes: this.nodes,
@@ -74,13 +77,14 @@ export default {
 
       const network = new Network(container, data, options);
 
+      //Valeurs des arcs et selection des noeuds
       network.on("click", (event) => {
         const { nodes, edges } = event;
         if (edges.length === 1) {
           const edgeId = edges[0];
           const edge = this.edges.get(edgeId);
 
-          // Éditer la valeur de l'arc
+          // Éditer ou entrée la valeur de l'arc
           const newEdgeValue = prompt("Entrez la valeur de l'arc :");
           if (newEdgeValue !== null) {
             edge.label = newEdgeValue.trim();
@@ -107,6 +111,7 @@ export default {
       });
     },
 
+    //Ajout d'un nouveau noeud
     ajouterNoeud() {
       if (this.newNodeLabel.trim() === '') {
         return;
@@ -158,6 +163,7 @@ export default {
       this.renderGraph();
     },
 
+    //Générer un id unique pour les noeuds
     generateUniqueId() {
       let id = this.nodes.length + 1;
       while (this.nodes.get(id)) {
@@ -166,6 +172,7 @@ export default {
       return id;
     },
 
+    //suppression d'un noeud du graphe 
     supprimerNoeud() {
       if (this.selectedNode === this.startNode) {
         this.startNode = null;
@@ -174,6 +181,7 @@ export default {
       }
 
       this.nodes.remove(this.selectedNode);
+      //suppression des arcs liés au noeud supprimé
       this.edges.remove(this.edges.get({ filter: (edge) => edge.from === this.selectedNode || edge.to === this.selectedNode }));
       this.selectedNode = null;
 
@@ -185,6 +193,8 @@ export default {
       }
     },
 
+
+    //Exécute l'algo de Bellman-Ford minimisation ou maximisation
     runAlgo(type) {
       let input = this.arcValues
       let start = this.startNodeGraph.toString()
@@ -197,6 +207,29 @@ export default {
         result = bellmanFordMaximisation(input, start, des)
       }
       this.fordResult = result
+
+   /*   const pathNodes = result.path
+      const nodeUpdates = this.nodes.forEach((node) => {
+        const nodeId = node.id.toString();
+        if (pathNodes.includes(nodeId)) {
+          return {
+            id: node.id,
+            color: {
+              background: 'red',
+              border: 'red'
+            }
+          };
+        } else { 
+          return {
+            id: node.id,
+            color: {
+              background: '#A5B4FC',
+              border: '#2B6CB0'
+            }
+          };
+        }
+      });
+      this.nodes.update(nodeUpdates);*/
     },
     /*
     modifierNoeud() {
@@ -268,7 +301,8 @@ export default {
         </div>
       </div>
       <div class="col-span-2">
-        <div class="w-full h-[75vh] bg-gray-300 rounded" ref="graphContainer"></div>
+        <div class="w-full h-[75vh] bg-gray-300 rounded" ref="graphContainer">
+        </div>
       </div>
       <div class="col-span-1">
         <div class="flex">
