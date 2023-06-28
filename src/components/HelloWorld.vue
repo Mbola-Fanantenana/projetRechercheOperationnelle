@@ -197,8 +197,8 @@ export default {
     //Exécute l'algo de Bellman-Ford minimisation ou maximisation
     runAlgo(type) {
       let input = this.arcValues
-      let start = this.startNodeGraph.toString()
-      let des = this.endNodeGraph.toString()
+      let start = this.startNodeGraph
+      let des = this.endNodeGraph
       let result;
       // alert(input+ " " + this.startNodeGraph + " " + this.endNodeGraph)
       if(type){
@@ -208,28 +208,28 @@ export default {
       }
       this.fordResult = result
 
-   /*   const pathNodes = result.path
-      const nodeUpdates = this.nodes.forEach((node) => {
+      const pathNodes = result.path
+      console.log('pathNodes: ',pathNodes);
+
+      /* const allNodes = this.nodes.get();
+
+      allNodes.forEach((node) => {
         const nodeId = node.id.toString();
         if (pathNodes.includes(nodeId)) {
-          return {
-            id: node.id,
-            color: {
-              background: 'red',
-              border: 'red'
-            }
+          node.color = {
+            background: 'red',
+            border: 'red'
           };
-        } else { 
-          return {
-            id: node.id,
-            color: {
-              background: '#A5B4FC',
-              border: '#2B6CB0'
-            }
+        } else {
+          node.color = {
+            background: '#A5B4FC',
+            border: '#2B6CB0'
           };
         }
       });
-      this.nodes.update(nodeUpdates);*/
+
+      this.nodes.update(allNodes); */
+
     },
     /*
     modifierNoeud() {
