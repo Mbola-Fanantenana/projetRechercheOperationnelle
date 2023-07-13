@@ -339,7 +339,8 @@ export default {
         </div>
       </div>
     </div>
-    <div class="col-span-2">
+    <!--
+      <div class="col-span-2">
       <div class="bg-white shadow-md rounded-lg p-4 mt-4">
         <h2 class="text-xl font-bold mb-2">Modifier un nœud</h2>
         <div class="flex items-center">
@@ -354,5 +355,6 @@ export default {
         </div>
       </div>
     </div>
+    --> 
   </div>
 </template>
