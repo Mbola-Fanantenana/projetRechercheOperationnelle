@@ -53,7 +53,7 @@ function shortestPathMax(graph, source, destination) {
   while (current !== null) {
     path.unshift(current);
     current = predecessors[current];
-    console.log(current);
+    // console.log(current);
   }
 
   const pathWeight = distances[destination];

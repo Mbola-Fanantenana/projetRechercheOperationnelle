@@ -1,23 +1,23 @@
 <script>
-import { DataSet, Network } from 'vis-network/standalone';
-import {bellmanFordMinimisation} from './../assets/js/bellmanFordMinimisation.js'
-import {bellmanFordMaximisation} from './../assets/js/bellmanFordMaximisation.js'
+import { DataSet, Network } from "vis-network/standalone";
+import { bellmanFordMinimisation } from "./../assets/js/bellmanFordMinimisation.js";
+import { bellmanFordMaximisation } from "./../assets/js/bellmanFordMaximisation.js";
 
 export default {
   data() {
     return {
-      newNodeLabel: '',
+      newNodeLabel: "",
       nodes: new DataSet(),
       edges: new DataSet(),
-      edgeValueInput: '',
+      edgeValueInput: "",
       selectedNode: null,
       startNode: null,
       endNode: null,
       arcValues: [{}],
-      startNodeGraph: '',
-      endNodeGraph: '',
-      nouveauLabel: '',
-      fordResult: '',
+      startNodeGraph: "",
+      endNodeGraph: "",
+      nouveauLabel: "",
+      fordResult: "",
     };
   },
 
@@ -30,24 +30,24 @@ export default {
     renderGraph() {
       const data = {
         nodes: this.nodes,
-        edges: this.edges
+        edges: this.edges,
       };
       const options = {
         interaction: {
-          selectConnectedEdges: false
+          selectConnectedEdges: false,
         },
         edges: {
           arrows: {
             to: {
               enabled: true,
               scaleFactor: 0.5,
-              type: "arrow"
-            }
+              type: "arrow",
+            },
           },
           color: {
-            inherit: false
-          }
-        }
+            inherit: false,
+          },
+        },
       };
 
       const container = this.$refs.graphContainer;
@@ -58,21 +58,22 @@ export default {
           {
             id: this.startNode,
             color: {
-              background: '#00C853',
-              border: '#00C853'
-            }
-          }]);
+              background: "#00C853",
+              border: "#00C853",
+            },
+          },
+        ]);
       }
       if (this.endNode) {
         this.nodes.update([
           {
             id: this.endNode,
-            color:
-            {
-              background: '#FF3D00',
-              border: '#FF3D00'
-            }
-          }]);
+            color: {
+              background: "#FF3D00",
+              border: "#FF3D00",
+            },
+          },
+        ]);
       }
 
       const network = new Network(container, data, options);
@@ -97,12 +98,12 @@ export default {
             const newEdge = {
               from: this.selectedNode,
               to: clickedNodeId,
-              label: this.edgeValueInput.trim()
+              label: this.edgeValueInput.trim(),
             };
 
             this.edges.add(newEdge);
             this.selectedNode = null;
-            this.edgeValueInput = '';
+            this.edgeValueInput = "";
             this.renderGraph();
           } else {
             this.selectedNode = clickedNodeId;
@@ -113,7 +114,7 @@ export default {
 
     //Ajout d'un nouveau noeud
     ajouterNoeud() {
-      if (this.newNodeLabel.trim() === '') {
+      if (this.newNodeLabel.trim() === "") {
         return;
       }
 
@@ -126,9 +127,9 @@ export default {
         id: id,
         label: this.newNodeLabel.trim(),
         color: {
-          background: '#A5B4FC',
-          border: '#2B6CB0'
-        }
+          background: "#A5B4FC",
+          border: "#2B6CB0",
+        },
       };
 
       this.nodes.add(newNode);
@@ -146,8 +147,8 @@ export default {
         this.endNode = id;
         const newEndNode = this.nodes.get(this.endNode);
         newEndNode.color = {
-          background: '#FF3D00',
-          border: '#FF3D00'
+          background: "#FF3D00",
+          border: "#FF3D00",
         };
         this.nodes.update(newEndNode);
       }
@@ -158,7 +159,7 @@ export default {
       this.startNodeGraph = startNodeGraph;
       this.endNodeGraph = endNodeGraph;
 
-      this.newNodeLabel = '';
+      this.newNodeLabel = "";
 
       this.renderGraph();
     },
@@ -172,7 +173,7 @@ export default {
       return id;
     },
 
-    //suppression d'un noeud du graphe 
+    //suppression d'un noeud du graphe
     supprimerNoeud() {
       if (this.selectedNode === this.startNode) {
         this.startNode = null;
@@ -182,34 +183,38 @@ export default {
 
       this.nodes.remove(this.selectedNode);
       //suppression des arcs liés au noeud supprimé
-      this.edges.remove(this.edges.get({ filter: (edge) => edge.from === this.selectedNode || edge.to === this.selectedNode }));
+      this.edges.remove(
+        this.edges.get({
+          filter: (edge) =>
+            edge.from === this.selectedNode || edge.to === this.selectedNode,
+        })
+      );
       this.selectedNode = null;
 
       // Mettre à jour le nœud de fin si le nœud supprimé était le nœud de fin
       if (!this.endNode && this.nodes.length > 0) {
         const lastNodeId = this.nodes.getIds()[this.nodes.length - 1];
         this.endNode = lastNodeId;
-        console.log('Noeud de fin mis à jour:', this.endNode);
+        console.log("Noeud de fin mis à jour:", this.endNode);
       }
     },
 
-
     //Exécute l'algo de Bellman-Ford minimisation ou maximisation
     runAlgo(type) {
-      let input = this.arcValues
-      let start = this.startNodeGraph
-      let des = this.endNodeGraph
+      let input = this.arcValues;
+      let start = this.startNodeGraph;
+      let des = this.endNodeGraph;
       let result;
       // alert(input+ " " + this.startNodeGraph + " " + this.endNodeGraph)
-      if(type){
-        result = bellmanFordMinimisation(input, start, des)
-      } else{
-        result = bellmanFordMaximisation(input, start, des)
+      if (type) {
+        result = bellmanFordMinimisation(input, start, des);
+      } else {
+        result = bellmanFordMaximisation(input, start, des);
       }
-      this.fordResult = result
+      this.fordResult = result;
 
-      const pathNodes = result.path
-      console.log('pathNodes: ',pathNodes);
+      const pathNodes = result.path;
+      console.log("pathNodes: ", pathNodes);
 
       /* const allNodes = this.nodes.get();
 
@@ -229,7 +234,6 @@ export default {
       });
 
       this.nodes.update(allNodes); */
-
     },
     /*
     modifierNoeud() {
@@ -246,16 +250,15 @@ export default {
       }
     },*/
 
-
     addEdge() {
       if (this.selectedEdge) {
         this.selectedEdge.label = this.edgeValueInput.trim();
         this.edges.update(this.selectedEdge);
         this.selectedEdge = null;
-        this.edgeValueInput = '';
+        this.edgeValueInput = "";
         this.renderGraph();
       }
-    }
+    },
   },
   watch: {
     edges: {
@@ -269,16 +272,15 @@ export default {
 
         if (this.endNode !== null) {
           const lastNodeLabel = this.nodes.get(this.endNode).label;
-          const lastArcValue = { [lastNodeLabel]: '0' };
+          const lastArcValue = { [lastNodeLabel]: "0" };
           arcValues.push(lastArcValue);
         }
 
-        this.arcValues = (JSON.stringify(arcValues));
+        this.arcValues = JSON.stringify(arcValues);
       },
-      deep: true
-    }
-  }
-
+      deep: true,
+    },
+  },
 };
 </script>
 
@@ -288,38 +290,56 @@ export default {
       <div class="col-span-1">
         <div class="flex items-center">
           <div class="mr-4">
-            <input v-model="newNodeLabel" type="text" placeholder="Entrer le noeud ici"
-              class="p-2 border border-gray-200 rounded w-40" />
+            <input
+              v-model="newNodeLabel"
+              type="text"
+              placeholder="Entrer le noeud ici"
+              class="p-2 border border-gray-200 rounded w-40"
+            />
           </div>
           <div class="mr-4">
-            <button @click="ajouterNoeud" class="px-4 py-2 bg-blue-500 text-white rounded">Ajouter</button>
+            <button
+              @click="ajouterNoeud"
+              class="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Ajouter
+            </button>
           </div>
           <div class="mr-4">
-            <button @click="supprimerNoeud" :disabled="!selectedNode"
-              class="px-4 py-2 bg-red-500 text-white rounded">Supprimer</button>
+            <button
+              @click="supprimerNoeud"
+              :disabled="!selectedNode"
+              class="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Supprimer
+            </button>
           </div>
         </div>
       </div>
       <div class="col-span-2">
-        <div class="w-full h-[75vh] bg-gray-300 rounded" ref="graphContainer">
-        </div>
+        <div class="w-full h-[75vh] bg-gray-300 rounded" ref="graphContainer"></div>
       </div>
       <div class="col-span-1">
         <div class="flex">
           <div class="mr-4">
-            <button @click="runAlgo(1)" class="px-2 py-2 bg-green-500 text-white rounded">Minimisation</button>
+            <button @click="runAlgo(1)" class="px-2 py-2 bg-green-500 text-white rounded">
+              Minimisation
+            </button>
           </div>
           <div class="mr-4">
-            <button @click="runAlgo(0)" class="px-2 py-2 bg-gray-500 text-white rounded">Maximisation</button>
+            <button @click="runAlgo(0)" class="px-2 py-2 bg-gray-500 text-white rounded">
+              Maximisation
+            </button>
           </div>
         </div>
         <div class="bg-white shadow-lg rounded-lg p-4">
           <h2 class="text-xl font-bold mb-2">Valeurs des arcs entre les noeuds :</h2>
           <ul>
             <!-- <li v-for="(value, index) in arcValues" :key="index">{{ value }}</li> -->
-            {{ arcValues }}
-            <br>
-
+            {{
+              arcValues
+            }}
+            <br />
           </ul>
         </div>
       </div>
@@ -335,7 +355,8 @@ export default {
         </div>
         <div class="bg-white shadow-md rounded-lg p-4">
           <h2 class="text-xl font-bold mb-2">Résultats (minimisation, maximisation)</h2>
-            {{ fordResult }}
+          Chemin le plus court: Debut -> <span v-for="node in fordResult.path">{{node}} -> </span>Fin <br>
+          Poid total: {{ fordResult.weight }}
         </div>
       </div>
     </div>
@@ -355,6 +376,6 @@ export default {
         </div>
       </div>
     </div>
-    --> 
+    -->
   </div>
 </template>
